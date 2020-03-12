@@ -5,6 +5,32 @@
   let title = "";
   let image = "";
   let description = "";
+  let formState = "empty";
+  let createdContacts = [];
+
+  let password = "";
+
+  function addContact() {
+    if (
+      name.trim().lenght == 0 ||
+      title.trim().length == 0 ||
+      image.trim().length == 0 ||
+      description.trim().length == 0
+    ) {
+      formState = "invalid";
+      return;
+    }
+    createdContacts = [
+      ...createdContacts,
+      {
+        name: name,
+        jobTitle: title,
+        imageUrl: image,
+        desc: description
+      }
+    ];
+    formState = "done";
+  }
 </script>
 
 <style>
@@ -33,4 +59,32 @@
   </div>
 </div>
 
-<ContactCard userName={name} jobTitle={title} {description} userImage={image} />
+<button on:click={addContact}>Add Contact Card</button>
+
+{#if formState === 'invalid'}
+  <p>Invalid input.</p>
+{:else}
+  <p>Please enter some data and hit the button !</p>
+{/if}
+
+{#each createdContacts as contact, id (contact.id)}
+  <h2>#{id}</h2>
+  <ContactCard
+    userName={contact.name}
+    jobTitle={contact.jobTitle}
+    description={contact.desc}
+    userImage={contact.imageUrl} />
+{/each}
+
+<h1>Exercice practice</h1>
+
+<label for="s">Password</label>
+<input type="password" bind:value={password} />
+{password.length}
+{#if password.length <= 5}
+  <h2>Too short is dangerous</h2>
+{:else if password.length >= 10}
+  <h2>The password is too long</h2>
+{:else}
+  <h2>The password is ok !</h2>
+{/if}
